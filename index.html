@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scicloid — 研究者と語ろう</title>
+  <meta name="description" content="Scicloidは、研究者と一般の方がオンラインで気軽につながるバーチャルサイエンスカフェです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&family=Noto+Sans+JP:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --ink: #1a1a18;
+      --ink-light: #5a5a54;
+      --accent: #2d6a4f;
+      --accent-soft: #e8f0eb;
+      --accent2: #c77b3a;
+      --rule: #d8d6ce;
+      --white: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 300;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--ink-light);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.1s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.25s forwards;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 0; right: 0;
+      height: 2px;
+      background: var(--accent2);
+      opacity: 0.6;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--ink-light);
+      max-width: 520px;
+      line-height: 2;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.55s forwards;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 2px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: #235740;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-soft);
+    }
+
+    /* ── DECORATION ── */
+    .hero-decoration {
+      position: fixed;
+      right: 0; top: 0; bottom: 0;
+      width: 38%;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 0.6s forwards;
+    }
+
+    .cycle-svg {
+      position: absolute;
+      top: 50%;
+      right: 6%;
+      transform: translateY(-50%);
+      width: 260px;
+      opacity: 0.12;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    h2 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 0;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 3rem;
+    }
+
+    .about-text p {
+      color: var(--ink-light);
+      margin-bottom: 1.2rem;
+    }
+
+    .about-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .point {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .point-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .point-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .point-body strong {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .point-body span {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      padding: 2rem 1.5rem;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--accent);
+      opacity: 0.25;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-size: 0.83rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+    }
+
+    /* ── FORMAT ── */
+    .format-box {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 2.5rem;
+      margin-top: 3rem;
+    }
+
+    .format-row {
+      display: flex;
+      gap: 2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: flex-start;
+    }
+
+    .format-row:last-child { border-bottom: none; }
+
+    .format-time {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      white-space: nowrap;
+      padding-top: 0.15rem;
+      min-width: 80px;
+    }
+
+    .format-content strong {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .format-content span {
+      font-size: 0.82rem;
+      color: var(--ink-light);
+    }
+
+    /* ── LEVEL BADGES ── */
+    .levels {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .level-badge {
+      padding: 0.5rem 1.2rem;
+      border-radius: 2px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .level-high { background: #1a1a18; color: #f7f6f2; }
+    .level-mid { background: var(--accent); color: white; }
+    .level-low { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+    /* ── EVENTS ── */
+    .events-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .event-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 2rem 2.5rem;
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .event-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 12px rgba(45,106,79,0.08);
+    }
+
+    .event-card.upcoming {
+      border-left: 3px solid var(--accent);
+    }
+
+    .event-card.past {
+      opacity: 0.6;
+    }
+
+    .event-date {
+      text-align: center;
+      padding-top: 0.1rem;
+    }
+
+    .event-date .month {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .event-date .day {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1;
+      display: block;
+      margin: 0.1rem 0;
+    }
+
+    .event-date .year {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      display: block;
+    }
+
+    .event-body {}
+
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .event-speaker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      letter-spacing: 0.04em;
+    }
+
+    .event-level {
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 0.2rem 0.7rem;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+
+    .event-level.high { background: #1a1a18; color: #f7f6f2; }
+    .event-level.mid  { background: var(--accent); color: white; }
+    .event-level.low  { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+    .event-title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .event-abstract {
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      line-height: 1.75;
+    }
+
+    .event-action {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.6rem;
+      padding-top: 0.2rem;
+      min-width: 110px;
+    }
+
+    .event-time {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-light);
+      text-align: right;
+    }
+
+    .status-badge {
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 0.25rem 0.7rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.upcoming-badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .status-badge.past-badge {
+      background: var(--rule);
+      color: var(--ink-light);
+    }
+
+    .events-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--white);
+      border: 1px dashed var(--rule);
+      border-radius: 2px;
+      margin-top: 2.5rem;
+    }
+
+    .events-empty p {
+      color: var(--ink-light);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .event-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .event-date {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        text-align: left;
+      }
+      .event-date .day { font-size: 1.4rem; }
+      .event-action {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    /* ── REGISTER ── */
+    #register {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 3rem;
+      max-width: 620px;
+      margin: 3rem auto 0;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+
+    label .required {
+      color: var(--accent2);
+      margin-left: 0.2rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      cursor: pointer;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: auto;
+      accent-color: var(--accent);
+    }
+
+    .form-note {
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      margin-top: 1.5rem;
+      line-height: 1.7;
+    }
+
+    /* ── SPEAKER CTA ── */
+    .speaker-cta {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      padding: 2.5rem;
+      margin-top: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .speaker-cta h3 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .speaker-cta p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes spin {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to   { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .cycle-svg { animation: spin 60s linear infinite; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1.5rem; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .steps { grid-template-columns: 1fr; }
+      .hero-decoration { display: none; }
+      .speaker-cta { flex-direction: column; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+      #register { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Sci<span>cloid</span></a>
+  <ul>
+    <li><a href="#about">企画について</a></li>
+    <li><a href="#events">イベント</a></li>
+    <li><a href="#how">イベント形式</a></li>
+    <li><a href="#join">参加登録</a></li>
+    <li><a href="#speaker">登壇希望</a></li>
+  </ul>
+</nav>
+
+<!-- HERO DECORATION -->
+<div class="hero-decoration">
+  <svg class="cycle-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="80" fill="none" stroke="#2d6a4f" stroke-width="1.5" stroke-dasharray="8 6"/>
+    <circle cx="100" cy="100" r="55" fill="none" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="4 8"/>
+    <circle cx="100" cy="100" r="30" fill="none" stroke="#c77b3a" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <circle cx="100" cy="20" r="5" fill="#2d6a4f"/>
+    <circle cx="180" cy="100" r="5" fill="#2d6a4f"/>
+    <circle cx="100" cy="180" r="5" fill="#2d6a4f"/>
+    <circle cx="20" cy="100" r="5" fill="#c77b3a"/>
+  </svg>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Virtual Science Café</p>
+  <h1>研究者と、<br><em>もっと気軽に</em><br>話せる場所を。</h1>
+  <p class="hero-desc">
+    Scicloidは、研究者と一般の方がオンラインで気軽につながる<br>
+    バーチャルサイエンスカフェです。<br>
+    録画なし・少人数・双方向。研究者も参加者も、ずっと楽しめる場所をつくります。
+  </p>
+  <div class="hero-actions">
+    <a href="#join" class="btn btn-primary">次回イベントに参加する</a>
+    <a href="#about" class="btn btn-secondary">企画について知る</a>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">About</p>
+  <h2>科学と社会をつなぐ、<br>循環するコミュニティ</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        「あの分野って実際どんな研究してるんだろう」と気になっても、専門家に直接聞ける機会はなかなかありません。一方、研究者の側も、気軽にアウトリーチできる仕組みがないのが現状です。
+      </p>
+      <p>
+        Scicloidはその両方の課題に応えるため、<strong>録画なし・少人数・双方向</strong>のオンラインイベントを定期開催します。研究者にとっても参加者にとっても、本当に居心地のよい場所を目指します。
+      </p>
+      <p>
+        名前の由来は <em>Sci（科学）+ Cycloid（循環）</em>。研究者と社会が循環的につながり、草の根でアカデミアへのサポートが広がっていく——そんな姿をイメージしています。
+      </p>
+    </div>
+    <div class="about-points">
+      <div class="point">
+        <div class="point-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="point-body">
+          <strong>少人数・深く刺さる</strong>
+          <span>1回10〜50名。顔の見える距離で研究者に直接質問できます。</span>
+        </div>
+      </div>
+      <div class="point">
+        <div class="point-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="point-body">
+          <strong>録画なし・気軽に話せる</strong>
+          <span>記録が残らないから、研究者も参加者も本音で話せます。</span>
+        </div>
+      </div>
+      <div class="point">
+        <div class="point-icon">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="point-body">
+          <strong>自律的に広がるしくみ</strong>
+          <span>ファシリテータや登壇研究者を随時募集。イベントの数を増やしていきます。</span>
+        </div>
+      </div>
+      <div class="point">
+        <div class="point-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="point-body">
+          <strong>インタラクティブな交流タイム</strong>
+          <span>講演後も研究者と自由に話せる時間を設けます。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EVENTS -->
+<section id="events">
+  <p class="section-label">Events</p>
+  <h2>イベント一覧</h2>
+  <p style="color:var(--ink-light); font-size:0.9rem;">開催予定・過去のイベントを掲載しています。</p>
+  <div class="events-grid" id="events-grid"></div>
+</section>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-label">Format</p>
+  <h2>イベントの流れ</h2>
+
+  <div class="format-box">
+    <div class="format-row">
+      <span class="format-time">0:00〜</span>
+      <div class="format-content">
+        <strong>第１部：自己紹介・研究分野の紹介</strong>
+        <span>スピーカーのバックグラウンドや研究分野の概要を紹介。スライド5〜10枚、15分ほど。その後、ファシリテータ・参加者からの質問タイム。</span>
+      </div>
+    </div>
+    <div class="format-row">
+      <span class="format-time">0:30〜</span>
+      <div class="format-content">
+        <strong>第２部：より深い内容</strong>
+        <span>研究の詳細、分野のホットトピック、応用の可能性など。スライド5〜10枚、15分ほど。その後、質問タイム。</span>
+      </div>
+    </div>
+    <div class="format-row">
+      <span class="format-time">1:00〜</span>
+      <div class="format-content">
+        <strong>インタラクティブ交流タイム（任意・最大1時間）</strong>
+        <span>声を出してスピーカーに自由に質問できる時間。研究と無関係な話題も大歓迎。残りたい方だけ参加できます。</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:3rem; margin-bottom:1rem; font-family:'Shippori Mincho',serif; font-size:1.1rem;">トークのレベル</h3>
+  <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1rem;">各回のスピーカーが設定するレベルをイベント告知時にお知らせします。</p>
+  <div class="levels">
+    <span class="level-badge level-high">高：専門的・最先端</span>
+    <span class="level-badge level-mid">中：高校レベルの知識があれば</span>
+    <span class="level-badge level-low">低：科学の雑談を楽しみたい</span>
+  </div>
+
+  <div class="steps" style="margin-top:3rem;">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>メーリングリストに登録</h3>
+      <p>下のフォームから登録。今後のイベント告知を受け取れます（いつでも解除可）。</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>イベントに申し込む</h3>
+      <p>興味のあるテーマのイベントに参加登録。事前アンケートで聞きたいことを教えてください。</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Zoomリンクを受け取る</h3>
+      <p>登録アドレスにZoomリンクをお送りします。当日は録画なしで気軽にご参加ください。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- JOIN / MAILING LIST -->
+<section id="join">
+  <p class="section-label">Join</p>
+  <h2>メーリングリストに登録する</h2>
+  <p style="color:var(--ink-light); font-size:0.9rem;">今後のイベント告知をいち早くお届けします。登録は無料です。</p>
+
+  <div id="register">
+    <div class="form-group">
+      <label>メールアドレス <span class="required">*</span></label>
+      <input type="email" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label>バックグラウンド</label>
+      <select>
+        <option value="">選択してください</option>
+        <option>学生（学部生）</option>
+        <option>大学院生・研究者</option>
+        <option>科学愛好家・一般</option>
+        <option>教育関係者</option>
+        <option>企業・産業関係</option>
+        <option>その他</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>聞いてみたい分野・テーマ</label>
+      <textarea placeholder="例：脳科学、宇宙物理、材料科学、気候変動… なんでも歓迎です"></textarea>
+    </div>
+    <div class="form-group">
+      <label>今後のイベント告知</label>
+      <div class="checkbox-group">
+        <label class="checkbox-item">
+          <input type="checkbox" checked>
+          今後開催されるイベントの告知を受け取る
+        </label>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%">登録する</button>
+    <p class="form-note">
+      ご登録いただいた情報は、イベント告知・運営のみに使用します。第三者への提供はありません。<br>
+      メーリングリストからはいつでも退会できます。
+    </p>
+  </div>
+
+  <!-- SPEAKER CTA -->
+  <div class="speaker-cta" id="speaker">
+    <div>
+      <h3>研究者の方へ：登壇しませんか？</h3>
+      <p>ご自身の研究や分野について、気軽に話してみませんか。<br>録画なし、少人数、ファシリテータがサポートします。</p>
+    </div>
+    <a href="mailto:scicloid@gmail.com?subject=登壇希望" class="btn btn-primary" style="white-space:nowrap">登壇を申し込む</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Scicloid</span>
+  <span>Virtual Science Café — 研究者と語ろう</span>
+  <span>お問い合わせ: scicloid@gmail.com</span>
+</footer>
+
+<script>
+  // ============================================================
+  // EVENTS DATA
+  // イベントを追加するときはここに項目を追加するだけ
+  // ============================================================
+  const EVENTS = [
+     {
+       date: "2026-10-15",       // YYYY-MM-DD
+       time: "20:00〜21:30",
+       speaker: "X田 X子（XX大学）",
+       affiliation: "",          // 省略可
+       title: "脳はどうやって「見る」を作るのか",
+       abstract: "私たちが何かを「見る」とき、脳の中では何が起きているのでしょうか。視覚野の仕組みから、錯視が生まれる理由まで、神経科学の最前線をわかりやすくご紹介します。",
+       level: "mid",             // "high" / "mid" / "low"
+       registerUrl: "https://forms.example.com/xxx",
+       status: "upcoming",       // "upcoming" / "past"
+     },
+  ];
+
+  const LEVEL_LABELS = { high: "高：専門的", mid: "中：一般向け", low: "低：雑談感覚" };
+
+  function renderEvents() {
+    const grid = document.getElementById('events-grid');
+    if (!EVENTS.length) {
+      grid.innerHTML = `
+        <div class="events-empty">
+          <p>現在、告知中のイベントはありません。<br>メーリングリストに登録いただくと、次回イベントをいち早くお知らせします。</p>
+          <a href="#join" class="btn btn-secondary">メーリングリストに登録する</a>
+        </div>`;
+      return;
+    }
+
+    // upcoming先、past後
+    const sorted = [...EVENTS].sort((a, b) => {
+      if (a.status === b.status) return new Date(b.date) - new Date(a.date);
+      return a.status === 'upcoming' ? -1 : 1;
+    });
+
+    grid.innerHTML = sorted.map(ev => {
+      const d = new Date(ev.date + 'T00:00:00');
+      const month = d.toLocaleDateString('ja-JP', { month: 'short' }).replace('月', 'M');
+      const day   = d.getDate();
+      const year  = d.getFullYear();
+      const isUpcoming = ev.status === 'upcoming';
+
+      return `
+      <div class="event-card ${isUpcoming ? 'upcoming' : 'past'}">
+        <div class="event-date">
+          <span class="month">${month}</span>
+          <span class="day">${day}</span>
+          <span class="year">${year}</span>
+        </div>
+        <div class="event-body">
+          <div class="event-meta">
+            <span class="event-speaker">${ev.speaker}</span>
+            <span class="event-level ${ev.level}">${LEVEL_LABELS[ev.level]}</span>
+          </div>
+          <div class="event-title">${ev.title}</div>
+          <div class="event-abstract">${ev.abstract}</div>
+        </div>
+        <div class="event-action">
+          <span class="event-time">${ev.time}</span>
+          ${isUpcoming
+            ? `<span class="status-badge upcoming-badge">開催予定</span>
+               <a href="${ev.registerUrl}" target="_blank" class="btn btn-primary" style="font-size:0.78rem; padding:0.55rem 1.2rem;">参加登録</a>`
+            : `<span class="status-badge past-badge">終了</span>`
+          }
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  renderEvents();
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Intersection observer for section animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('section').forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(20px)';
+    section.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    observer.observe(section);
+  });
+
+  // Form submit placeholder
+  document.querySelector('.btn-primary[style*="width:100%"]').addEventListener('click', function() {
+    alert('ありがとうございます！\n（現在フォームは準備中です。メーリングリストシステム連携後に有効になります）');
+  });
+</script>
+
+</body>
+</html>
