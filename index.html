@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scicloid — 研究者と語ろう</title>
-  <meta name="description" content="Scicloidは、研究者と一般の方がオンラインで気軽につながるバーチャルサイエンスカフェです。">
+  <meta name="description" content="Scicloidは、研究者と一般の方がオンラインで気軽につながるバーチャルサイエンスカフェ運営プラットフォームです。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&family=Noto+Sans+JP:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -742,7 +742,7 @@
   <h1>研究者と、<br><em>もっと気軽に</em><br>話せる場所を。</h1>
   <p class="hero-desc">
     Scicloidは、研究者と一般の方がオンラインで気軽につながる<br>
-    バーチャルサイエンスカフェです。<br>
+    バーチャルサイエンスカフェ運営プラットフォームです。<br>
     録画なし・少人数・双方向。研究者も参加者も、ずっと楽しめる場所をつくります。
   </p>
   <div class="hero-actions">
@@ -764,9 +764,6 @@
       </p>
       <p>
         Scicloidはその両方の課題に応えるため、<strong>録画なし・少人数・双方向</strong>のオンラインイベントを定期開催します。研究者にとっても参加者にとっても、本当に居心地のよい場所を目指します。
-      </p>
-      <p>
-        名前の由来は <em>Sci（科学）+ Cycloid（循環）</em>。研究者と社会が循環的につながり、草の根でアカデミアへのサポートが広がっていく——そんな姿をイメージしています。
       </p>
     </div>
     <div class="about-points">
@@ -895,7 +892,7 @@
       <label>バックグラウンド</label>
       <select>
         <option value="">選択してください</option>
-        <option>学生（学部生）</option>
+        <option>学生（学部生、中高生）</option>
         <option>大学院生・研究者</option>
         <option>科学愛好家・一般</option>
         <option>教育関係者</option>
@@ -906,15 +903,6 @@
     <div class="form-group">
       <label>聞いてみたい分野・テーマ</label>
       <textarea placeholder="例：脳科学、宇宙物理、材料科学、気候変動… なんでも歓迎です"></textarea>
-    </div>
-    <div class="form-group">
-      <label>今後のイベント告知</label>
-      <div class="checkbox-group">
-        <label class="checkbox-item">
-          <input type="checkbox" checked>
-          今後開催されるイベントの告知を受け取る
-        </label>
-      </div>
     </div>
     <button class="btn btn-primary" style="width:100%">登録する</button>
     <p class="form-note">
@@ -929,7 +917,7 @@
       <h3>研究者の方へ：登壇しませんか？</h3>
       <p>ご自身の研究や分野について、気軽に話してみませんか。<br>録画なし、少人数、ファシリテータがサポートします。</p>
     </div>
-    <a href="mailto:scicloid@gmail.com?subject=登壇希望" class="btn btn-primary" style="white-space:nowrap">登壇を申し込む</a>
+    <a href="mailto:scicloid.info@gmail.com?subject=登壇希望" class="btn btn-primary" style="white-space:nowrap">登壇を申し込む</a>
   </div>
 </section>
 
@@ -937,7 +925,7 @@
 <footer>
   <span>© 2025 Scicloid</span>
   <span>Virtual Science Café — 研究者と語ろう</span>
-  <span>お問い合わせ: scicloid@gmail.com</span>
+  <span>お問い合わせ: scicloid.info@gmail.com</span>
 </footer>
 
 <script>
@@ -1041,6 +1029,85 @@
     section.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
     observer.observe(section);
   });
+
+  // ── NOTICE POPUP ──
+  (function() {
+    const NOTICE = {
+      show: true,                 // ← falseにするとポップアップ非表示
+      title: "🔔 お知らせ",
+      message: "現在、Scicloidは準備期間のため一時休止中です。\nしばらくお待ちください。",
+      buttonText: "閉じる",
+    };
+
+    if (!NOTICE.show) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      #notice-overlay {
+        position: fixed; inset: 0; z-index: 9999;
+        background: rgba(26,26,24,0.55);
+        display: flex; align-items: center; justify-content: center;
+        padding: 1.5rem;
+        backdrop-filter: blur(3px);
+      }
+      #notice-modal {
+        background: var(--white);
+        border-radius: 4px;
+        max-width: 420px; width: 100%;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+        overflow: hidden;
+      }
+      #notice-header {
+        background: var(--accent);
+        padding: 1rem 1.4rem;
+      }
+      #notice-title {
+        color: #fff;
+        font-family: 'Shippori Mincho', serif;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+      }
+      #notice-body {
+        padding: 1.4rem 1.4rem 1rem;
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        line-height: 1.9;
+      }
+      #notice-close {
+        display: block;
+        margin: 0 1.4rem 1.4rem auto;
+        padding: 0.55rem 1.6rem;
+        background: var(--accent);
+        color: #fff;
+        border: none; border-radius: 2px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      #notice-close:hover { background: #235740; }
+    `;
+    document.head.appendChild(style);
+
+    const overlay = document.createElement('div');
+    overlay.id = 'notice-overlay';
+    overlay.innerHTML = `
+      <div id="notice-modal">
+        <div id="notice-header"><span id="notice-title">${NOTICE.title}</span></div>
+        <p id="notice-body">${NOTICE.message.replace(/\n/g, '<br>')}</p>
+        <button id="notice-close">${NOTICE.buttonText}</button>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const close = () => {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => overlay.remove(), 300);
+    };
+    document.getElementById('notice-close').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  })();
 
   // Form submit placeholder
   document.querySelector('.btn-primary[style*="width:100%"]').addEventListener('click', function() {
